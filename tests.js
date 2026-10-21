@@ -3,7 +3,7 @@
    nie die Einwilligung: Pixel und CAPI laufen weiter ausschließlich über track.js.
    Jeder Test teilt unabhängig 50/50 (bleibt pro Browser gleich).
    Varianten landen als "ABTest:<test>:<A|B>" in der Spalte "Ereignisse" des Tracking-Sheets.
-   Prüfen: ?ab_cookie-leiste=B oder ?ab_seite-kurz=B (oder ?ab=B für alle Tests). */
+   Prüfen: ?ab_seite-kurz=A oder ?ab_seite-kurz=B (oder ?ab=B). */
 (function () {
   var d = document, w = window, html = d.documentElement;
   if (!/^\/$/.test(location.pathname)) return;           /* nur Startseite */
@@ -21,20 +21,7 @@
   function ready(fn) { if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', fn); else fn(); }
   var gemeldet = [];
 
-  /* ---------- Test 1: Cookie-Leiste statt Vollbild-Fenster ---------- */
-  var cookie = bucket('cookie-leiste'); gemeldet.push('cookie-leiste:' + cookie);
-  if (cookie === 'B') {
-    html.classList.add('ab-cookie-leiste');
-    addCss('html.ab-cookie-leiste .eick-ov{inset:auto 0 0 0!important;align-items:flex-end!important;padding:0!important;background:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;pointer-events:none}' +
-      'html.ab-cookie-leiste .eick{pointer-events:auto;max-width:none!important;width:100%!important;border-radius:14px 14px 0 0!important;border-left:0!important;border-right:0!important;border-bottom:0!important;padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px))!important;box-shadow:0 -10px 30px rgba(0,0,0,.35)!important}' +
-      'html.ab-cookie-leiste .eick-k,html.ab-cookie-leiste .eick h2,html.ab-cookie-leiste .eick small{display:none!important}' +
-      'html.ab-cookie-leiste .eick p{font-size:13px!important;line-height:1.45!important}' +
-      'html.ab-cookie-leiste .eick-b{grid-template-columns:1fr 1fr!important;margin:10px 0 0!important}' +
-      'html.ab-cookie-leiste .eick-b button{padding:11px 8px!important;font-size:14px!important}' +
-      '@media(min-width:760px){html.ab-cookie-leiste .eick{display:flex!important;align-items:center;gap:20px;padding:14px 24px!important}html.ab-cookie-leiste .eick-b{margin:0!important;flex:0 0 340px}}');
-    var mo = new MutationObserver(function () { var o = d.getElementById('eick'); if (o) { o.removeAttribute('aria-modal'); mo.disconnect(); } });
-    mo.observe(html, { childList: true, subtree: true });
-  }
+  /* Test 1 (Cookie-Leiste) am 21.10.2026 beendet (Chris): alle sehen wieder Tayfuns Original-Fenster. */
 
   /* ---------- Test 2: schlankere Seite, schneller zum Formular ---------- */
   var kurz = bucket('seite-kurz'); gemeldet.push('seite-kurz:' + kurz);
