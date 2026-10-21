@@ -26,6 +26,7 @@
     if (!AUFTEILEN) return;
     var q = location.search || '';
     if (/bot|crawl|spider|headless|lighthouse/i.test(navigator.userAgent)) return;   /* Suchmaschinen sehen immer die Startseite */
+    if (/[?&]ab=a\b/i.test(q)) return;                 /* expat-insurance.ae/?ab=A zeigt immer die Startseite, ohne Zulosung */
     var v = null;
     try { v = localStorage.getItem(KEY); } catch (e) { }
     if (v !== 'A' && v !== 'B') {
