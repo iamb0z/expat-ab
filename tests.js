@@ -34,6 +34,8 @@
     }
     if (v === 'B') {
       html.style.visibility = 'hidden';                 /* kein Aufblitzen der Startseite */
+      /* Die Weiterleitung soll keine leere 1-Sekunden-Zeile im Besuchsprotokoll erzeugen (zählt sonst doppelt) */
+      try { var of = w.fetch; w.fetch = function (u) { if (String(u).indexOf('igybxkrq') >= 0) return Promise.resolve(); return of.apply(this, arguments); }; } catch (e) { }
       location.replace('/beratung' + q + location.hash);
       return;
     }
