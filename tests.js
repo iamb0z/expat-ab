@@ -12,7 +12,7 @@
 (function () {
   var d = document, w = window, html = d.documentElement, path = location.pathname.replace(/\/+$/, '') || '/';
   var KEY = 'eiab_lp-test';
-  var AUFTEILEN = false;   /* Werbebesucher erst nach Chris' Freigabe aufteilen. Bis dahin: /beratung nur zum Ansehen. */
+  var AUFTEILEN = true;    /* Freigabe Chris 21.10.2026: Werbebesucher werden 50/50 aufgeteilt. */
 
   function melde(v) {
     var n = 0, t = setInterval(function () {
