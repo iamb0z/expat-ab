@@ -1,7 +1,7 @@
 /* Expat Insurance: A/B-Test (gepflegt von BOZ Marketing)
    Wird über den Lader ab.js (in Webflow site-weit direkt nach site/track.js) geladen.
    Test "lp-test" (ab 21.10.2026): Startseite (A) gegen eigene Landingpage /beratung (B).
-   - Nur Werbebesucher auf "/" werden aufgeteilt (fbclid oder utm_source fb/ig). Alle anderen sehen die Startseite.
+   - Alle Besucher auf "/" werden aufgeteilt (Chris 21.10.2026), außer Suchmaschinen-Bots.
    - B-Besucher werden sofort nach /beratung weitergeleitet, alle Parameter (UTM, fbclid) bleiben erhalten.
    - Auf /beratung baut dieses Skript die Landingpage auf (Webflow liefert dort nur den leeren Seitenrahmen
      mit track.js). Cookie-Banner, Pixel und Besuchsprotokoll kommen aus Tayfuns track.js, Impressum/Datenschutz
@@ -25,11 +25,10 @@
   if (path === '/') {
     if (!AUFTEILEN) return;
     var q = location.search || '';
-    var ad = /[?&]fbclid=/.test(q) || /[?&]utm_source=(fb|ig|facebook|instagram|meta)\b/i.test(q);
+    if (/bot|crawl|spider|headless|lighthouse/i.test(navigator.userAgent)) return;   /* Suchmaschinen sehen immer die Startseite */
     var v = null;
     try { v = localStorage.getItem(KEY); } catch (e) { }
     if (v !== 'A' && v !== 'B') {
-      if (!ad) return;                                   /* keine Werbung, kein Test */
       v = Math.random() < 0.5 ? 'A' : 'B';
       try { localStorage.setItem(KEY, v); } catch (e) { }
     }
