@@ -56,10 +56,12 @@
   var WEBHOOK = 'https://hook.eu1.make.com/2anxx40bb0c8nqs13q6pj8sobjvy2jom', WA = '971553465531';
   var CDN = 'https://cdn.prod.website-files.com/691d8312c1303aa87deddf57/';
   var LOGOS = [
+    CDN + '6a2c4f59743d0ad516447ff0_Logo%20Global%20Health%20neu.svg',
     'https://cdn.jsdelivr.net/gh/tayfun-cmd/expat-media@35ea49bd9ea91336df9e41b09a83b78f6e198ae2/logos/foyer.png',
     CDN + '6a2c4ed3412c15a2a39f7a31_Logo%20BDAE.webp',
     CDN + '6a2c4ed5a85ec63d77ab0204_Logo%20PassportCard.webp',
     CDN + '6a2d77950b98e527cbf5a8f6_april-international-logo-color.png',
+    CDN + '6a2c4f7b3bebca121e71fb6c_Logo%20Cigna.svg',
     CDN + '6a2d77921ac36d393489dd72_genki-logo-color.png',
     CDN + '6a74812b687ad4e57edcd846_CareConcept%20Logo.png'
   ];
@@ -101,10 +103,12 @@
     "#lpb section{padding:44px 0}" +
     "#lpb .lpb-label{color:var(--orange);font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}" +
     "#lpb h2{font-size:28px}" +
-    "#lpb .lpb-logos{padding:26px 0;border-bottom:1px solid var(--line)}" +
-    "#lpb .lpb-logos p{text-align:center;font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}" +
-    "#lpb .lpb-logogrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px 20px;align-items:center}" +
-    "#lpb .lpb-logogrid img{width:100%;height:34px;object-fit:contain}" +
+    "#lpb .lpb-logos{background:var(--navy);padding:8px 0 36px}" +
+    "#lpb .lpb-logos p{text-align:center;font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#a3b3c9;margin-bottom:16px}" +
+    "#lpb .lpb-logogrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}" +
+    "#lpb .lpb-logogrid span{display:flex;align-items:center;justify-content:center;height:58px;padding:12px 14px;background:#1a3a63;border:1px solid rgba(255,255,255,.12);border-radius:14px}" +
+    "#lpb .lpb-logogrid img{max-width:100%;max-height:100%;object-fit:contain;display:block}" +
+    "#lpb .lpb-logogrid img.lpb-hell{background:#fff;border-radius:10px;padding:5px 10px;box-sizing:border-box}" +
     "#lpb .lpb-cost{background:var(--soft)}" +
     "#lpb .lpb-cards{display:grid;gap:12px;margin-top:22px}" +
     "#lpb .lpb-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px}" +
@@ -155,7 +159,7 @@
     "@media(min-width:760px){#lpb{font-size:18px}#lpb .lpb-hero{padding:40px 0 64px}#lpb .lpb-hero .lpb-wrap{display:grid;grid-template-columns:1.25fr 1fr;column-gap:56px;row-gap:0;grid-template-areas:'t f' 'v f';align-items:start}#lpb .lpb-text{grid-area:t}#lpb .lpb-trust{grid-area:v}#lpb .lpb-hero .lpb-form{grid-area:f;align-self:center}" +
     "#lpb .lpb-hero h1{font-size:52px}#lpb .lpb-cta{max-width:420px}#lpb .lpb-proof{justify-content:flex-start}#lpb .lpb-micro{text-align:left;max-width:420px}" +
     "#lpb .lpb-form{margin-top:0;padding:28px}#lpb .lpb-hero .lpb-person{max-width:420px}" +
-    "#lpb section{padding:72px 0}#lpb h2{font-size:38px}#lpb .lpb-logogrid{grid-template-columns:repeat(6,1fr)}" +
+    "#lpb section{padding:72px 0}#lpb h2{font-size:38px}#lpb .lpb-logos .lpb-wrap{max-width:1320px}#lpb .lpb-logogrid{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}#lpb .lpb-logogrid span{height:62px;flex:0 0 auto;padding:12px 14px}#lpb .lpb-logogrid img{max-height:36px;max-width:170px}" +
     "#lpb .lpb-cards,#lpb .lpb-steps,#lpb .lpb-rgrid{grid-template-columns:repeat(3,1fr)}#lpb .lpb-cards{grid-template-columns:repeat(2,1fr)}" +
     "#lpb .lpb-step{flex-direction:column}#lpb .lpb-narrow{max-width:760px}#lpb .lpb-sticky{display:none!important}#lpb footer{padding-bottom:28px}}";
 
@@ -183,7 +187,7 @@
     '</div></div>' +
 
     '<div class="lpb-logos"><div class="lpb-wrap"><p>Mit unseren Partnern weltweit versichert</p><div class="lpb-logogrid">' +
-      LOGOS.map(function (s) { return '<img src="' + s + '" alt="" loading="lazy">'; }).join('') +
+      LOGOS.map(function (s) { return '<span><img src="' + s + '" alt=""' + (/foyer|april|CareConcept/.test(s) ? ' class="lpb-hell"' : '') + '></span>'; }).join('') +
     '</div></div></div>' +
 
     '<section class="lpb-cost"><div class="lpb-wrap">' +
