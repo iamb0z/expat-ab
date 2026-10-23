@@ -44,10 +44,16 @@
     return;
   }
 
-  if (path !== '/beratung') return;
+  /* Webflow liefert für unbekannte Adressen seine 404-Vorlage (Titel „Seite nicht gefunden"). Auf /beratung bauen wir
+     die Landingpage, auf allen anderen 404-Adressen eine Expat-Fehlerseite statt der englischen Vorlage. */
+  var IST404 = path !== '/beratung';
+  if (IST404 && !/nicht gefunden|not found/i.test(d.title || '')) return;
+  var vor = d.createElement('style');                    /* Vorlage sofort ausblenden, kein Aufblitzen */
+  vor.textContent = 'body>*:not(#lpb):not(.eif-ov):not(.eick-ov):not(#eick):not(.eilg-ov):not(script):not(style){display:none!important}';
+  (d.head || html).appendChild(vor);
 
   /* ---------- /beratung: Landingpage aufbauen ---------- */
-  if (AUFTEILEN) { try { localStorage.setItem(KEY, 'B'); } catch (e) { } }
+  if (AUFTEILEN && !IST404) { try { localStorage.setItem(KEY, 'B'); } catch (e) { } }
   var LEGAL = 'https://cdn.jsdelivr.net/gh/tayfun-cmd/expat-media@e58818bddcb4d12238958b891b5100f302874d20/site/legal';
   if (!d.querySelector('script[src*="site/legal.js"]')) {
     if (d.readyState === 'loading') d.write('<link rel="stylesheet" href="' + LEGAL + '.css"><script src="' + LEGAL + '.js" defer><\/script>');
@@ -92,6 +98,11 @@
     "#lpb .lpb-cta{margin-top:24px}" +
     "#lpb .lpb-micro{font-size:14px;color:#9aa7bd;text-align:center;margin-top:10px}" +
     "#lpb .lpb-trust{margin-top:22px}" +
+    "#lpb .lpb-404{min-height:calc(100vh - 160px);padding-top:48px}" +
+    "#lpb .lpb-cta2{display:grid;gap:10px}" +
+    "#lpb .lpb-btn2{display:block;text-align:center;color:#fff!important;font-weight:600;font-size:17px;padding:15px 20px;border-radius:12px;text-decoration:none;border:1.5px solid rgba(255,255,255,.35)}" +
+    "#lpb .lpb-btn2:hover{border-color:#fff}" +
+    "#lpb .lpb-404 footer{padding-bottom:28px}" +
     "#lpb .lpb-proof{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:center;margin-top:18px;font-size:14px;color:#fff}" +
     "#lpb .lpb-proof b{font-weight:600}" +
     "#lpb .lpb-stars{color:#ffb400;letter-spacing:1px}" +
@@ -167,7 +178,7 @@
     "#lpb .lpb-final h2{color:#fff}" +
     "#lpb .lpb-final .lpb-sub{margin:12px auto 0;max-width:520px}" +
     "#lpb .lpb-final .lpb-cta{max-width:420px;margin:24px auto 0}" +
-    "#lpb footer{background:#061020;color:#9aa7bd;font-size:14px;padding:24px 0 96px;text-align:center}" +
+    "#lpb footer{background:#061020;color:#9aa7bd;font-size:14px;padding:24px 0 96px;text-align:center}#lpb .lpb-404+footer{padding-bottom:28px}" +
     "#lpb footer a{color:#b9c6de;text-decoration:underline;margin:0 8px}" +
     "#lpb footer p{margin-top:10px}" +
     "#lpb .lpb-sticky{position:fixed;left:0;right:0;bottom:0;z-index:50;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:rgba(9,23,46,.96);box-shadow:0 -8px 24px rgba(0,0,0,.25);display:none}" +
@@ -175,7 +186,7 @@
     "#lpb .lpb-sticky .lpb-btn{box-shadow:none;padding:15px 20px}" +
     "@media(min-width:760px){#lpb{font-size:18px}#lpb .lpb-hero{padding:40px 0 64px}#lpb .lpb-hero .lpb-wrap{display:grid;grid-template-columns:1.25fr 1fr;column-gap:56px;row-gap:0;grid-template-areas:'t f' 'v f';align-items:start}#lpb .lpb-text{grid-area:t}#lpb .lpb-trust{grid-area:v}#lpb .lpb-hero .lpb-form{grid-area:f;align-self:center}" +
     "#lpb .lpb-hero h1{font-size:52px}#lpb .lpb-cta{max-width:420px}#lpb .lpb-proof{justify-content:flex-start}#lpb .lpb-micro{text-align:left;max-width:420px}" +
-    "#lpb .lpb-form{margin-top:0;padding:28px}#lpb .lpb-hero .lpb-person{max-width:420px}" +
+    "#lpb .lpb-form{margin-top:0;padding:28px}#lpb .lpb-404 .lpb-wrap{grid-template-areas:'t v'!important;align-items:center}#lpb .lpb-404 .lpb-trust{margin-top:0}#lpb .lpb-cta2{grid-template-columns:1fr 1fr;max-width:520px}#lpb .lpb-hero .lpb-person{max-width:420px}" +
     "#lpb section{padding:72px 0}#lpb h2{font-size:38px}#lpb .lpb-logos .lpb-wrap{max-width:1320px}#lpb .lpb-logogrid{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}#lpb .lpb-logogrid span{height:62px;flex:0 0 auto;padding:12px 14px}#lpb .lpb-logogrid img{max-height:36px;max-width:170px}" +
     "#lpb .lpb-cards,#lpb .lpb-steps,#lpb .lpb-rgrid{grid-template-columns:repeat(3,1fr)}#lpb .lpb-cards{grid-template-columns:repeat(2,1fr)}" +
     "#lpb .lpb-step{flex-direction:column}#lpb .lpb-narrow{max-width:760px}#lpb .lpb-sticky{display:none!important}#lpb footer{padding-bottom:28px}}";
@@ -300,12 +311,29 @@
 
     '<div class="lpb-sticky" id="lpb-sticky">' + btn() + '</div>';
 
+  var body404 =
+    '<header class="lpb-top"><div class="lpb-wrap"><a class="lpb-logo" href="/" aria-label="EXPAT Insurance"></a></div></header>' +
+    '<div class="lpb-hero lpb-404"><div class="lpb-wrap"><div class="lpb-text">' +
+      '<div class="lpb-eyebrow">Fehler 404</div>' +
+      '<h1>Diese Seite gibt es leider nicht. <em>Dein Schutz ist trotzdem nur einen Klick entfernt.</em></h1>' +
+      '<p class="lpb-sub">Vielleicht ist der Link veraltet oder hat einen Tippfehler. Hier geht es weiter:</p>' +
+      '<div class="lpb-cta lpb-cta2"><a class="lpb-btn" href="/">Zur Startseite</a><a class="lpb-btn2" href="/rechner">Beitrag berechnen</a></div>' +
+    '</div>' +
+    '<div class="lpb-trust">' +
+      '<div class="lpb-proof"><span>' + STERNE + ' <b>5,0</b> Google-Bewertung</span><span><b>1.000+</b> Expats abgesichert</span><span><b>13+</b> Jahre Erfahrung</span></div>' +
+      '<div class="lpb-person"><div class="lpb-face"><img src="' + FOTO + '" alt="Tayfun Dülger"></div><div><b>Tayfun Dülger</b><small>Dein fester Ansprechpartner. Direkt per WhatsApp.</small></div></div>' +
+    '</div>' +
+    '</div></div>' +
+    '<footer><div class="lpb-wrap"><div class="lpb-legal"><a href="#">Impressum</a><a href="#">Datenschutz</a></div>' +
+      '<p>© 2026 EXPAT Insurance. Alle Rechte vorbehalten.</p></div></footer>';
+
   function aufbauen() {
     if (d.getElementById('lpb')) return;
     html.classList.add('lpb');
     var st = d.createElement('style'); st.textContent = css; (d.head || html).appendChild(st);
-    var root = d.createElement('div'); root.id = 'lpb'; root.innerHTML = body;
+    var root = d.createElement('div'); root.id = 'lpb'; root.innerHTML = IST404 ? body404 : body;
     d.body.insertBefore(root, d.body.firstChild);
+    if (IST404) { d.title = 'Seite nicht gefunden | EXPAT Insurance'; return; }
 
     d.title = 'Kostenlose Beratung | EXPAT Insurance';
     var form = d.getElementById('lpb-form');
