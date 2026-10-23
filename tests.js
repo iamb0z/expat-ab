@@ -5,7 +5,7 @@
    - B-Besucher werden sofort nach /beratung weitergeleitet, alle Parameter (UTM, fbclid) bleiben erhalten.
    - Auf /beratung baut dieses Skript die Landingpage auf (Webflow liefert dort nur den leeren Seitenrahmen
      mit track.js). Cookie-Banner, Pixel und Besuchsprotokoll kommen aus Tayfuns track.js, Impressum/Datenschutz
-     aus seinem legal.js. Das Kurzformular sendet wie sein funnel.js: gleicher Make-Webhook, gleiches Lead-Signal
+     aus seinem legal.js. Das Formular (2 Seiten, gleiche Fragen wie sein Fragebogen) sendet wie sein funnel.js: gleicher Make-Webhook, gleiches Lead-Signal
      (eiTrack + eiLead mit eventID), gleiche WhatsApp-Nachricht.
    Varianten im Tracking-Sheet (Spalte "Ereignisse"): "ABTest:lp-test:A" bzw. "ABTest:lp-test:B".
    Ansehen: expat-insurance.ae/ = A, expat-insurance.ae/beratung = B. */
@@ -136,6 +136,23 @@
     "#lpb .lpb-in:focus{outline:none;border-color:var(--navy)}" +
     "#lpb .lpb-in.err{border-color:var(--orange)}" +
     "#lpb .lpb-form .lpb-btn{margin-top:4px}" +
+    "#lpb .lpb-prog{height:4px;background:#e7ecf3;border-radius:4px;overflow:hidden}#lpb .lpb-prog i{display:block;height:100%;background:var(--orange)}" +
+    "#lpb .lpb-stepno{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:8px 0 6px}" +
+    "#lpb .lpb-q{margin-bottom:6px}" +
+    "#lpb .lpb-ql{display:block;font-weight:600;font-size:15px;margin:8px 0 8px}#lpb .lpb-ql.lpb-opt{font-weight:500;color:var(--muted);font-size:14px}" +
+    "#lpb .lpb-q.err .lpb-ql{color:var(--orange)}#lpb .lpb-q.err .lpb-chip span{border-color:var(--orange)}" +
+    "#lpb .lpb-chips{display:grid;gap:8px;margin-bottom:10px}" +
+    "#lpb .lpb-chip{display:block;cursor:pointer}#lpb .lpb-chip input{position:absolute;opacity:0;pointer-events:none}" +
+    "#lpb .lpb-chip span{display:block;padding:12px 14px;border:1.5px solid #cfd8e6;border-radius:10px;font-weight:600;font-size:15px;line-height:1.3}" +
+    "#lpb .lpb-chip small{display:block;font-weight:400;color:var(--muted);font-size:13px;margin-top:2px}" +
+    "#lpb .lpb-chip input:checked+span{border-color:var(--navy);background:#eef3fb;box-shadow:inset 0 0 0 1px var(--navy)}" +
+    "#lpb .lpb-chip input:focus-visible+span{outline:2px solid var(--orange);outline-offset:2px}" +
+    "#lpb .lpb-kid{display:flex;gap:8px}#lpb .lpb-kid .lpb-in{flex:1}" +
+    "#lpb .lpb-rm,#lpb .lpb-add,#lpb .lpb-back{font:inherit;background:none;border:0;color:var(--navy);cursor:pointer;padding:6px 2px}" +
+    "#lpb .lpb-rm{font-size:22px;padding:0 10px;margin-bottom:10px}" +
+    "#lpb .lpb-add{font-weight:600;font-size:15px;margin-bottom:10px}" +
+    "#lpb .lpb-back{display:block;margin:8px auto 0;color:var(--muted);font-size:15px;text-decoration:underline}" +
+    "#lpb input[type=date].lpb-in{min-height:52px}" +
     "#lpb .lpb-fnote{font-size:13px;color:var(--muted);text-align:center;margin-top:10px}" +
     "#lpb .lpb-done{text-align:center;padding:10px 0}" +
     "#lpb .lpb-done b{display:block;font-family:'Bricolage Grotesque',sans-serif;font-size:22px;margin:8px 0}" +
@@ -172,13 +189,48 @@
       '<p class="lpb-sub">Wir vergleichen über 22 Tarife von sieben internationalen Versicherern und finden den Tarif, der zu deinem Leben passt.</p>' +
     '</div>' +
     '<form class="lpb-form" id="lpb-form" novalidate>' +
-      '<h2>Kostenlose Beratung</h2>' +
-      '<p class="lpb-fsub">Trag dich ein, wir melden uns persönlich bei dir.</p>' +
-      '<div class="lpb-row"><input class="lpb-in" name="vorname" placeholder="Vorname" autocomplete="given-name"><input class="lpb-in" name="nachname" placeholder="Nachname" autocomplete="family-name"></div>' +
-      '<input class="lpb-in" name="tel" type="tel" placeholder="Telefon / WhatsApp" autocomplete="tel">' +
-      '<input class="lpb-in" name="email" type="email" placeholder="E-Mail (optional)" autocomplete="email">' +
-      '<button type="submit" class="lpb-btn" id="lpb-hero-cta">' + CTA + '</button>' +
-      '<p class="lpb-fnote">Kostenlos und unverbindlich. Wir melden uns persönlich, kein Callcenter.</p>' +
+      '<div class="lpb-step1">' +
+        '<div class="lpb-prog"><i style="width:50%"></i></div><div class="lpb-stepno">Schritt 1 von 2</div>' +
+        '<h2>Kostenlose Beratung</h2>' +
+        '<p class="lpb-fsub">Trag dich ein, wir melden uns persönlich bei dir.</p>' +
+        '<div class="lpb-row"><input class="lpb-in" name="vorname" placeholder="Vorname" autocomplete="given-name"><input class="lpb-in" name="nachname" placeholder="Nachname" autocomplete="family-name"></div>' +
+        '<input class="lpb-in" name="tel" type="tel" placeholder="Telefon / WhatsApp" autocomplete="tel">' +
+        '<input class="lpb-in" name="email" type="email" placeholder="E-Mail (optional)" autocomplete="email">' +
+        '<button type="button" class="lpb-btn" id="lpb-hero-cta">Weiter</button>' +
+        '<p class="lpb-fnote">Kostenlos und unverbindlich. Wir melden uns persönlich, kein Callcenter.</p>' +
+      '</div>' +
+      '<div class="lpb-step2" hidden>' +
+        '<div class="lpb-prog"><i style="width:100%"></i></div><div class="lpb-stepno">Schritt 2 von 2</div>' +
+        '<h2>Fast geschafft</h2>' +
+        '<p class="lpb-fsub">Damit wir dir passende Tarife zeigen können.</p>' +
+        '<div class="lpb-q" data-q="dob"><label class="lpb-ql">Wann bist du geboren?</label><input class="lpb-in" name="dob" type="date" aria-label="Geburtsdatum"></div>' +
+        '<div class="lpb-q" data-q="fuer"><span class="lpb-ql">Für wen suchst du Schutz?</span><div class="lpb-chips">' +
+          '<label class="lpb-chip"><input type="radio" name="fuer" value="Nur für mich"><span>Nur für mich</span></label>' +
+          '<label class="lpb-chip"><input type="radio" name="fuer" value="Für mich und meine Familie"><span>Für mich und meine Familie</span></label>' +
+        '</div></div>' +
+        '<div class="lpb-fam" hidden>' +
+          '<label class="lpb-ql lpb-opt">Geburtsdatum Partner/in (optional)</label><input class="lpb-in" name="partnerDob" type="date" aria-label="Geburtsdatum Partner/in">' +
+          '<span class="lpb-ql lpb-opt">Kinder (optional)</span><div class="lpb-kids"></div>' +
+          '<button type="button" class="lpb-add">+ Kind hinzufügen</button>' +
+        '</div>' +
+        '<div class="lpb-q" data-q="anliegen"><span class="lpb-ql">Was ist dein Anliegen?</span><div class="lpb-chips">' +
+          '<label class="lpb-chip"><input type="radio" name="anliegen" value="Neuvertrag"><span>Neuvertrag<small>Ich suche eine neue Krankenversicherung</small></span></label>' +
+          '<label class="lpb-chip"><input type="radio" name="anliegen" value="Bestehenden Vertrag überprüfen"><span>Bestehenden Vertrag überprüfen<small>Ich bin versichert und will es prüfen lassen</small></span></label>' +
+        '</div></div>' +
+        '<div class="lpb-q" data-q="status"><span class="lpb-ql">Wie ist dein Auswanderungsstatus?</span><div class="lpb-chips">' +
+          '<label class="lpb-chip"><input type="radio" name="status" value="In Planung"><span>In Planung<small>Ich plane den Schritt ins Ausland</small></span></label>' +
+          '<label class="lpb-chip"><input type="radio" name="status" value="Schon ausgewandert"><span>Schon ausgewandert<small>Ich lebe bereits im Ausland</small></span></label>' +
+        '</div></div>' +
+        '<div class="lpb-q" data-q="land"><label class="lpb-ql">Wohin soll es gehen, oder wo lebst du?</label><input class="lpb-in" name="land" placeholder="z.B. Dubai, Thailand, Spanien"></div>' +
+        '<div class="lpb-q" data-q="schutz"><span class="lpb-ql">Welche Absicherung wünschst du dir?</span><div class="lpb-chips lpb-chips3">' +
+          '<label class="lpb-chip"><input type="radio" name="schutz" value="Basis-Schutz"><span>Basis-Schutz<small>Solide Grundabsicherung zum günstigen Beitrag</small></span></label>' +
+          '<label class="lpb-chip"><input type="radio" name="schutz" value="Mittlerer Schutz"><span>Mittlerer Schutz<small>Ausgewogen aus Leistung und Preis</small></span></label>' +
+          '<label class="lpb-chip"><input type="radio" name="schutz" value="Premium-Schutz"><span>Premium-Schutz<small>Maximale Leistung, beste Kliniken weltweit</small></span></label>' +
+        '</div></div>' +
+        '<button type="submit" class="lpb-btn">Anfrage senden</button>' +
+        '<button type="button" class="lpb-back">Zurück</button>' +
+        '<p class="lpb-fnote">Kostenlos und unverbindlich. Wir melden uns persönlich, kein Callcenter.</p>' +
+      '</div>' +
     '</form>' +
     '<div class="lpb-trust">' +
       '<div class="lpb-proof"><span>' + STERNE + ' <b>5,0</b> Google-Bewertung</span><span><b>1.000+</b> Expats abgesichert</span><span><b>13+</b> Jahre Erfahrung</span></div>' +
@@ -270,24 +322,70 @@
     /* Formular: gleicher Weg wie Tayfuns funnel.js */
     function T(n, p, o) { try { if (w.eiTrack) w.eiTrack(n, p, o); } catch (e) { } }
     var gestartet = false;
-    form.addEventListener('focusin', function () { if (!gestartet) { gestartet = true; T('FunnelStart', { quelle: 'Kurzformular' }); } });
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
+    form.addEventListener('focusin', function () { if (!gestartet) { gestartet = true; T('FunnelStart', { quelle: 'Formular Landingpage' }); } });
+    var st1 = form.querySelector('.lpb-step1'), st2 = form.querySelector('.lpb-step2'), fam = form.querySelector('.lpb-fam'), kids = form.querySelector('.lpb-kids');
+    function nachOben() { var y = form.getBoundingClientRect().top + (w.pageYOffset || html.scrollTop) - 12; if (form.getBoundingClientRect().top < 0) w.scrollTo(0, y); }
+    function wert(n) { var el = form.elements[n]; if (!el) return ''; if (el.length !== undefined && !el.tagName) { for (var i = 0; i < el.length; i++) if (el[i].checked) return el[i].value; return ''; } return (el.value || '').trim(); }
+
+    /* Seite 1: Kontakt, dann Weiter */
+    d.getElementById('lpb-hero-cta').addEventListener('click', function () {
       var f = form.elements, ok = true;
       ['vorname', 'nachname', 'tel'].forEach(function (k) {
         var v = (f[k].value || '').trim(), bad = !v || (k === 'tel' && v.replace(/\D/g, '').length < 6);
         f[k].classList.toggle('err', bad); if (bad) ok = false;
       });
       if (!ok) return;
-      var ans = { vorname: f.vorname.value.trim(), nachname: f.nachname.value.trim(), tel: f.tel.value.trim(), email: f.email.value.trim(), anliegen: 'Kurzformular Landingpage', kids: [] };
+      T('FunnelStep', { schritt: 'kontakt', nr: 1 });
+      st1.hidden = true; st2.hidden = false; nachOben();
+      T('FunnelStep', { schritt: 'details', nr: 2 });
+    });
+    form.querySelector('.lpb-back').addEventListener('click', function () { st2.hidden = true; st1.hidden = false; nachOben(); });
+    st1.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); d.getElementById('lpb-hero-cta').click(); } });
+
+    /* Familie: Partner und Kinder einblenden */
+    form.addEventListener('change', function (e) {
+      if (e.target.name === 'fuer') fam.hidden = e.target.value !== 'Für mich und meine Familie';
+      var q = e.target.closest && e.target.closest('.lpb-q'); if (q) q.classList.remove('err');
+    });
+    function neuesKind() { var r = d.createElement('div'); r.className = 'lpb-kid'; r.innerHTML = '<input class="lpb-in" type="date" aria-label="Geburtsdatum Kind"><button type="button" class="lpb-rm" aria-label="Entfernen">&times;</button>'; r.querySelector('.lpb-rm').onclick = function () { kids.removeChild(r); }; kids.appendChild(r); }
+    form.querySelector('.lpb-add').addEventListener('click', neuesKind);
+    form.addEventListener('input', function (e) { e.target.classList.remove('err'); var q = e.target.closest && e.target.closest('.lpb-q'); if (q) q.classList.remove('err'); });
+
+    /* Seite 2: alle Fragen wie in Tayfuns Fragebogen, erst dann senden */
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (st2.hidden) { d.getElementById('lpb-hero-cta').click(); return; }
+      var fehlt = null;
+      ['dob', 'fuer', 'anliegen', 'status', 'land', 'schutz'].forEach(function (k) {
+        var q = form.querySelector('.lpb-q[data-q="' + k + '"]'), leer = !wert(k);
+        q.classList.toggle('err', leer); var inp = q.querySelector('.lpb-in'); if (inp) inp.classList.toggle('err', leer);
+        if (leer && !fehlt) fehlt = q;
+      });
+      if (fehlt) { fehlt.scrollIntoView({ block: 'center' }); return; }
+      var fami = wert('fuer') === 'Für mich und meine Familie';
+      var ans = { vorname: wert('vorname'), nachname: wert('nachname'), dob: wert('dob'), fuer: wert('fuer'),
+        partnerDob: fami ? wert('partnerDob') : '', kids: [], anliegen: wert('anliegen'), status: wert('status'),
+        land: wert('land'), schutz: wert('schutz'), tel: wert('tel'), email: wert('email') };
+      if (fami) kids.querySelectorAll('input').forEach(function (i) { if (i.value) ans.kids.push(i.value); });
       var eid = 'lead-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8); ans.event_id = eid;
       try { var at = w.eiAttr ? w.eiAttr() : {}; for (var k in at) ans[k] = at[k]; } catch (x) { }
       T('Lead', { quelle: 'Funnel', content_name: 'Beratungsanfrage' }, { eventID: eid });
       try { if (w.eiLead) w.eiLead(eid, { email: ans.email, phone: ans.tel, fn: ans.vorname, ln: ans.nachname }, 'Funnel'); } catch (x) { }
       try { fetch(WEBHOOK, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(ans) }); } catch (x) { }
-      var msg = 'Neue Anfrage über die Website\nName: ' + ans.vorname + ' ' + ans.nachname + '\nKontakt: ' + ans.tel + (ans.email ? ' / ' + ans.email : '');
-      try { w.open('https://wa.me/' + WA + '?text=' + encodeURIComponent(msg), '_blank'); } catch (x) { }
+      /* WhatsApp-Text exakt wie Tayfuns funnel.js (buildMsg) */
+      var L = ['Neue Anfrage über die Website', 'Name: ' + ans.vorname + ' ' + ans.nachname];
+      if (ans.dob) L.push('Geburtsdatum: ' + ans.dob);
+      L.push('Versicherung für: ' + ans.fuer);
+      if (ans.partnerDob) L.push('Partner Geburtsdatum: ' + ans.partnerDob);
+      if (ans.kids.length) L.push('Kinder: ' + ans.kids.join(', '));
+      if (ans.anliegen) L.push('Anliegen: ' + ans.anliegen);
+      if (ans.status) L.push('Status: ' + ans.status);
+      if (ans.land) L.push('Zielland: ' + ans.land);
+      if (ans.schutz) L.push('Gewünschte Absicherung: ' + ans.schutz);
+      L.push('Kontakt: ' + ans.tel + (ans.email ? ' / ' + ans.email : ''));
+      try { w.open('https://wa.me/' + WA + '?text=' + encodeURIComponent(L.join('\n')), '_blank'); } catch (x) { }
       form.innerHTML = '<div class="lpb-done"><div class="lpb-chk">✓</div><b>Danke, ' + ans.vorname.replace(/[<>&"]/g, '') + '!</b><p>Deine Anfrage ist unterwegs. Wir haben WhatsApp geöffnet, damit du sie direkt absenden kannst. Wir melden uns persönlich bei dir.</p></div>';
+      nachOben();
     });
 
     /* Knopf unten: erst wenn das Formular aus dem Bild ist, nie über dem Cookie-Banner */
