@@ -233,11 +233,6 @@
           '<label class="lpb-chip"><input type="radio" name="status" value="Schon ausgewandert"><span>Schon ausgewandert<small>Ich lebe bereits im Ausland</small></span></label>' +
         '</div></div>' +
         '<div class="lpb-q" data-q="land"><label class="lpb-ql">Wohin soll es gehen, oder wo lebst du?</label><input class="lpb-in" name="land" placeholder="z.B. Dubai, Thailand, Spanien"></div>' +
-        '<div class="lpb-q" data-q="schutz"><span class="lpb-ql">Welche Absicherung wünschst du dir?</span><div class="lpb-chips lpb-chips3">' +
-          '<label class="lpb-chip"><input type="radio" name="schutz" value="Basis-Schutz"><span>Basis-Schutz<small>Solide Grundabsicherung zum günstigen Beitrag</small></span></label>' +
-          '<label class="lpb-chip"><input type="radio" name="schutz" value="Mittlerer Schutz"><span>Mittlerer Schutz<small>Ausgewogen aus Leistung und Preis</small></span></label>' +
-          '<label class="lpb-chip"><input type="radio" name="schutz" value="Premium-Schutz"><span>Premium-Schutz<small>Maximale Leistung, beste Kliniken weltweit</small></span></label>' +
-        '</div></div>' +
         '<button type="submit" class="lpb-btn">Anfrage senden</button>' +
         '<button type="button" class="lpb-back">Zurück</button>' +
         '<p class="lpb-fnote">Kostenlos und unverbindlich. Wir melden uns persönlich, kein Callcenter.</p>' +
@@ -384,7 +379,7 @@
       e.preventDefault();
       if (st2.hidden) { d.getElementById('lpb-hero-cta').click(); return; }
       var fehlt = null;
-      ['dob', 'fuer', 'anliegen', 'status', 'land', 'schutz'].forEach(function (k) {
+      ['dob', 'fuer', 'anliegen', 'status', 'land'].forEach(function (k) {
         var q = form.querySelector('.lpb-q[data-q="' + k + '"]'), leer = !wert(k);
         q.classList.toggle('err', leer); var inp = q.querySelector('.lpb-in'); if (inp) inp.classList.toggle('err', leer);
         if (leer && !fehlt) fehlt = q;
@@ -393,7 +388,7 @@
       var fami = wert('fuer') === 'Für mich und meine Familie';
       var ans = { vorname: wert('vorname'), nachname: wert('nachname'), dob: wert('dob'), fuer: wert('fuer'),
         partnerDob: fami ? wert('partnerDob') : '', kids: [], anliegen: wert('anliegen'), status: wert('status'),
-        land: wert('land'), schutz: wert('schutz'), tel: wert('tel'), email: wert('email') };
+        land: wert('land'), schutz: '',   /* Frage seit 24.10. raus (Chris): Kunden wissen das an dieser Stelle noch nicht */ tel: wert('tel'), email: wert('email') };
       if (fami) kids.querySelectorAll('input').forEach(function (i) { if (i.value) ans.kids.push(i.value); });
       var eid = 'lead-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8); ans.event_id = eid;
       try { var at = w.eiAttr ? w.eiAttr() : {}; for (var k in at) ans[k] = at[k]; } catch (x) { }
